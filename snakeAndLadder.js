@@ -110,13 +110,14 @@ while (player1Position < winningPoint && player2Position < winningPoint) {
 
   playerTwo();
   if (player1Position === winningPoint) {
-    console.log("----- PLAYER ONE WON THE GAME -----");
+    console.log("\n----- PLAYER ONE WON THE GAME -----");
   }
   if (player2Position === winningPoint) {
-    console.log("----- PLAYER TWO WON THE GAME -----");
+    console.log("\n----- PLAYER TWO WON THE GAME -----");
   }
 }
 
 console.log("\n---Final Report----");
 console.log("Player 1 total dice rolls:", diceCount1);
 console.log("Player 2 total dice rolls:", diceCount2);
+ 
