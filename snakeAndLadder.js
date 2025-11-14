@@ -41,7 +41,10 @@ while (player1Position < winningPoint && player2Position < winningPoint) {
         console.log("playerOption =", option);
         console.log("player1DiceValue =", diceValue);
         console.log("player1CurrentPosition =", player1Position);
-        playerOne();
+        if (player1Position !== winningPoint) {
+          playerOne();
+        }
+
         break;
       case "snack":
         diceValue = rollDice();
@@ -86,7 +89,9 @@ while (player1Position < winningPoint && player2Position < winningPoint) {
         console.log("playerOption =", option);
         console.log("player2DiceValue =", diceValue);
         console.log("player2CurrentPosition =", player2Position);
-        playerTwo();
+        if (player2Position !== winningPoint) {
+          playerTwo();
+        }
         break;
       case "snack":
         diceValue = rollDice();
@@ -120,4 +125,3 @@ while (player1Position < winningPoint && player2Position < winningPoint) {
 console.log("\n---Final Report----");
 console.log("Player 1 total dice rolls:", diceCount1);
 console.log("Player 2 total dice rolls:", diceCount2);
- 
