@@ -85,8 +85,8 @@ function takeTurn(player) {
     if (player.position + dice <= winningPoint) {
       player.position += dice;
     }
-    console.log("Ladder! Player gets an extra turn!");
-    console.log(`New position: ${player.position}`);
+    console.log("Player gets extra turn");
+    console.log(`Current position: ${player.position}`);
     return true;
   }
 
@@ -97,13 +97,13 @@ function takeTurn(player) {
     console.log("Snake bite!");
   }
 
-  console.log(`New position: ${player.position}`);
+  console.log(`Current position: ${player.position}`);
   return false;
 }
 
 // ======== logic for starting the game
 function startGame() {
-  console.log("\n=== GAME STARTED ===");
+  console.log("\n--- Game Started ---");
 
   let index = 0;
 
