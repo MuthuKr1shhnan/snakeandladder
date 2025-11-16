@@ -1,9 +1,47 @@
-let player1Position = 0;
-let player2Position = 0;
-let diceCount1 = 0;
-let diceCount2 = 0;
+import readline from "readline";
 let playerOption = ["noPlay", "laddar", "snack"];
+let totalPlayers = 0;
+let players = [];
 const winningPoint = 100;
+
+//============= Logic for getting input from terminal
+let input = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+//============= logic for asking question about number of player
+function askQuestion() {
+  input.question("Enter the total number of Players: ", (num) => {
+    totalPlayers = Number(num);
+    if (!isNaN(totalPlayers) && totalPlayers > 0) {
+      console.log(totalPlayers);
+      askName(1);
+    } else {
+      askQuestion();
+    }
+  });
+}
+
+askQuestion();
+//============== asking question from ask name of player
+function askName(n) {
+  input.question("Enter the name of the Player: ", (name) => {
+    players.push({
+      name,
+      diceCount: 0,
+      started: false,
+      position: 0,
+    });
+
+    if (n === totalPlayers) {
+      console.log(players);
+      return startGame();
+      input.close();
+    } else {
+      askName(n + 1);
+    }
+  });
+}
 
 function rollDice() {
   return Math.ceil(Math.random() * 6);
@@ -13,115 +51,90 @@ function getOption() {
   return Math.floor(Math.random() * 3);
 }
 
-while (player1Position < winningPoint && player2Position < winningPoint) {
-  let diceValue;
-  let option;
-  //playerOne
-  function playerOne() {
-    option = playerOption[getOption()];
-    switch (option) {
-      case "noPlay":
-        console.log("\n---PlayerOne previousPosition=", player1Position);
-        console.log("playerOption =", option);
-        console.log("player1CurrentPosition =", player1Position);
-        diceCount1++;
+// ======== The main game logic for giving turns to players
+function takeTurn(player) {
+  console.log(`\n--- ${player.name}'s turn ---`);
+  console.log(`Previous position: ${player.position}`);
 
-        break;
-      case "laddar":
-        diceValue = rollDice();
-        console.log("\n---PlayerOne previousPosition=", player1Position);
-        if (
-          player1Position + diceValue < 100 ||
-          player1Position + diceValue === 100
-        ) {
-          player1Position += diceValue;
-        }
+  let dice = rollDice();
+  let option = playerOption[getOption()];
 
-        diceCount1++;
-        console.log("playerOption =", option);
-        console.log("player1DiceValue =", diceValue);
-        console.log("player1CurrentPosition =", player1Position);
-        if (player1Position !== winningPoint) {
-          playerOne();
-        }
+  console.log(`Dice rolled: ${dice}`);
+  console.log(`Option: ${option}`);
 
-        break;
-      case "snack":
-        diceValue = rollDice();
-        console.log("\n--PlayerOne previousPosition=", player1Position);
-        if (
-          player1Position - diceValue > 0 ||
-          player1Position - diceValue === 0
-        ) {
-          player1Position -= diceValue;
-        }
-        diceCount1++;
-        console.log("playerOption =", option);
-        console.log("player1DiceValue =", diceValue);
-        console.log("player1CurrentPosition =", player1Position);
+  player.diceCount++;
 
-        break;
+  // starting logic
+  if (!player.started) {
+    if (dice === 1) {
+      player.started = true;
+      player.position = 1;
+      console.log("Player started!");
+    } else {
+      console.log("Player has not started yet. Need 1 to start.");
     }
+    return false;
   }
 
-  //playerTwo
-  function playerTwo() {
-    option = playerOption[getOption()];
-    switch (option) {
-      case "noPlay":
-        console.log("\n---PlayerTwo previousPosition=", player2Position);
-        console.log("playerOption =", option);
-        console.log("player2CurrentPosition =", player2Position);
-        diceCount2++;
+  // logic for options
+  if (option === "noPlay") {
+    console.log("No movement this turn.");
+  }
 
-        break;
-      case "laddar":
-        diceValue = rollDice();
-        console.log("\n---PlayerTwo previousPosition=", player2Position);
-        if (
-          player2Position + diceValue < 100 ||
-          player2Position + diceValue === 100
-        ) {
-          player2Position += diceValue;
-        }
-
-        diceCount2++;
-        console.log("playerOption =", option);
-        console.log("player2DiceValue =", diceValue);
-        console.log("player2CurrentPosition =", player2Position);
-        if (player2Position !== winningPoint) {
-          playerTwo();
-        }
-        break;
-      case "snack":
-        diceValue = rollDice();
-        console.log("\n---PlayerTwo previousPosition=", player2Position);
-        if (
-          player2Position - diceValue > 0 ||
-          player2Position - diceValue === 0
-        ) {
-          player2Position -= diceValue;
-        }
-        diceCount2++;
-        console.log("playerOption =", option);
-        console.log("player2DiceValue =", diceValue);
-        console.log("player2CurrentPosition =", player2Position);
-
-        break;
+  if (option === "laddar") {
+    if (player.position + dice <= winningPoint) {
+      player.position += dice;
     }
+    console.log("Ladder! Player gets an extra turn!");
+    console.log(`New position: ${player.position}`);
+    return true;
   }
 
-  playerOne();
+  if (option === "snack") {
+    if (player.position - dice >= 0) {
+      player.position -= dice;
+    }
+    console.log("Snake bite!");
+  }
 
-  playerTwo();
-  if (player1Position === winningPoint) {
-    console.log("\n----- PLAYER ONE WON THE GAME -----");
-  }
-  if (player2Position === winningPoint) {
-    console.log("\n----- PLAYER TWO WON THE GAME -----");
-  }
+  console.log(`New position: ${player.position}`);
+  return false;
 }
 
-console.log("\n---Final Report----");
-console.log("Player 1 total dice rolls:", diceCount1);
-console.log("Player 2 total dice rolls:", diceCount2);
+// ======== logic for starting the game
+function startGame() {
+  console.log("\n=== GAME STARTED ===");
+
+  let index = 0;
+
+  function nextTurn() {
+    let player = players[index];
+    let extraTurn = takeTurn(player);
+
+   
+    if (player.position === winningPoint) {
+      console.log(`\n${player.name} WINS THE GAME!`);
+      console.log("\n--- Final Report ---");
+
+      players.forEach((p) => {
+        console.log(`${p.name} rolled the dice ${p.diceCount} times`);
+      });
+      input.close()
+      
+      return;
+    }
+
+ 
+    if (!extraTurn) {
+      if (index < players.length - 1) {
+        index++;
+      } else {
+        index = 0;
+      }
+    }
+
+    nextTurn()
+  }
+
+  nextTurn();
+}
