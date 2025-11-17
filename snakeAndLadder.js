@@ -52,7 +52,6 @@ function askQuestion() {
   });
 }
 
-
 askQuestion();
 //============== asking question from ask name of player
 function askName(n) {
@@ -73,6 +72,66 @@ function askName(n) {
   });
 }
 
+// ======== The main game logic for giving turns to players
+function playerTurn(player) {
+  console.log(`\n--- ${player.name}'s turn ---`);
+  console.log(`Previous position: ${player.position}`);
+
+  let dice = rollDice();
+  let option = playerOption[getOptionFornoPlay()];
+
+  console.log(`Dice rolled: ${dice}`);
+
+  player.diceCount++;
+
+  // starting logic
+  if (!player.started) {
+    if (dice === 1) {
+      player.started = true;
+      player.position = 1;
+      console.log("Player started!");
+    } else {
+      console.log("Player has not started yet. Need 1 to start.");
+    }
+    return false;
+  }
+
+  if (player.position + dice <= 100) {
+    player.position += dice;
+  } else {
+    return;
+  }
+  // logic for options
+  if (option === "noPlay") {
+    console.log("No movement this turn.");
+  }
+  //LADDER
+  for (let ladder of playerOption[2]) {
+    if (Number(ladder.start) === player.position) {
+      player.position = ladder.end;
+      player.diceCount++;
+
+      console.log("Ladder!");
+      console.log("Player gets extra turn");
+      console.log(`Current position: ${player.position}`);
+      return true;
+    }
+  }
+  //SNAKE
+  for (let snake of playerOption[1]) {
+    if (Number(snake.head) === player.position) {
+      player.position = snake.tail;
+      player.diceCount++;
+      console.log("Snake");
+      console.log("Player Position goes back!!!");
+      console.log(`Current position: ${player.position}`);
+      return false;
+    }
+  }
+
+  console.log(`Current position: ${player.position}`);
+  return false;
+}
 // ======== logic for starting the game
 function startGame() {
   console.log("\n--- Game Started ---");
@@ -106,60 +165,4 @@ function startGame() {
   }
 
   nextTurn();
-}
-
-// ======== The main game logic for giving turns to players
-function playerTurn(player) {
-  console.log(`\n--- ${player.name}'s turn ---`);
-  console.log(`Previous position: ${player.position}`);
-
-  let dice = rollDice();
-  let option = playerOption[getOptionFornoPlay()];
-
-  console.log(`Dice rolled: ${dice}`);
-
-  player.diceCount++;
-
-  // starting logic
-  if (!player.started) {
-    if (dice === 1) {
-      player.started = true;
-      player.position = 1;
-      console.log("Player started!");
-    } else {
-      console.log("Player has not started yet. Need 1 to start.");
-    }
-    return false;
-  }
-  player.position += dice;
-  // logic for options
-  if (option === "noPlay") {
-    console.log("No movement this turn.");
-  }
-  //LADDER
-  for (let ladder of playerOption[2]) {
-    if (Number(ladder.start) === player.position) {
-      player.position = ladder.end;
-      player.diceCount++;
-
-      console.log("Ladder!");
-      console.log("Player gets extra turn");
-      console.log(`Current position: ${player.position}`);
-      return true;
-    }
-  }
-  //SNAKE
-  for (let snake of playerOption[1]) {
-    if (Number(snake.head) === player.position) {
-      player.position = snake.tail;
-      player.diceCount++;
-      console.log("Snake");
-      console.log("Player Position goes back!!!");
-      console.log(`Current position: ${player.position}`);
-      return false;
-    }
-  }
-
-  console.log(`Current position: ${player.position}`);
-  return false;
 }
