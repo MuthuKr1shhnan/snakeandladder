@@ -52,6 +52,7 @@ function askQuestion() {
   });
 }
 
+
 askQuestion();
 //============== asking question from ask name of player
 function askName(n) {
