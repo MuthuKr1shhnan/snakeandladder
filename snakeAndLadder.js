@@ -52,7 +52,7 @@ function getOption() {
 }
 
 // ======== The main game logic for giving turns to players
-function takeTurn(player) {
+function playerTurn(player) {
   console.log(`\n--- ${player.name}'s turn ---`);
   console.log(`Previous position: ${player.position}`);
 
@@ -109,7 +109,7 @@ function startGame() {
 
   function nextTurn() {
     let player = players[index];
-    let extraTurn = takeTurn(player);
+    let extraTurn = playerTurn(player);
 
    
     if (player.position === winningPoint) {
