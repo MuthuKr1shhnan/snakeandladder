@@ -3,21 +3,22 @@ let playerOption = [
   "noPlay",
   //SNAKE
   [
-    { head: 97, tail: 78 },
-    { head: 86, tail: 64 },
-    { head: 92, tail: 71 },
-    { head: 67, tail: 54 },
-    { head: 46, tail: 25 },
-    { head: 38, tail: 19 },
+    { head: 98, tail: 55 },
+    { head: 82, tail: 42 },
+    { head: 56, tail: 19 },
+    { head: 47, tail: 15 },
+    { head: 30, tail: 7 },
+    { head: 73, tail: 51 },
+    { head: 92, tail: 75 },
   ],
   //LADDER
   [
-    { start: 62, end: 80 },
-    { start: 44, end: 77 },
-    { start: 63, end: 84 },
-    { start: 54, end: 75 },
-    { start: 26, end: 47 },
-    { start: 16, end: 38 },
+    { start: 4, end: 25 },
+    { start: 21, end: 39 },
+    { start: 29, end: 74 },
+    { start: 43, end: 76 },
+    { start: 63, end: 80 },
+    { start: 71, end: 89 },
   ],
 ];
 let totalPlayers = 0;
